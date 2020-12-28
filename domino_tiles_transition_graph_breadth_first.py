@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 def create_transition_dic(width,height):
     transition_dic={}
@@ -8,11 +9,11 @@ def create_transition_dic(width,height):
 #        print("\nn = "+str(n))
         adjacent_edges_list=[]
 #        print("if (n-1)%width !=0, then left exists; value is "+str((n-1)%width))
-        if ((n-1)%width != 0): 
+        if ((n-1)%width != 0):
 #            print("left = "+str(n-1))
             adjacent_edges_list.append(n-1) # left
-#        print("if n%width !=0, then right exists; value is "+str(n%width))    
-        if (n%width     != 0): 
+#        print("if n%width !=0, then right exists; value is "+str(n%width))
+        if (n%width     != 0):
 #            print("right = "+str(n+1))
             adjacent_edges_list.append(n+1) # right
 #        print("if n > width, then top exists")
@@ -46,7 +47,7 @@ def print_list_of_transitions(list_of_transitions):
     for this_list in list_of_transitions:
         print(this_list)
     return
-    
+
 def append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status):
     new_transition_list=[]
     for this_list in list_of_transitions:
@@ -84,7 +85,7 @@ f=open('record_'+str(width)+'x'+str(height)+'_'+str(starting_value)+'.dat','w')
 if print_status: print("\nseed:")
 this_transition=[starting_value]
 list_of_transitions.append(this_transition)
-if print_status: 
+if print_status:
     print("list of transitions:")
     print_list_of_transitions(list_of_transitions)
 

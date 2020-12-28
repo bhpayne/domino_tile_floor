@@ -13,9 +13,11 @@ RUN apt update && apt -y upgrade && apt -y install \
   graphviz \
   time \
   python3-dev \
-  python3-pip 
+  python3-pip \
+  graphviz-dev \
+  python-yaml
 
-RUN pip3 install pygraphviz pydot
+#RUN pip3 install pygraphviz pydot
 
 # Clean up apt mess
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

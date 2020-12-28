@@ -1,4 +1,6 @@
-# http://sebastianraschka.com/Articles/2014_multiprocessing.html 
+#!/usr/bin/env python3
+
+# http://sebastianraschka.com/Articles/2014_multiprocessing.html
 import multiprocessing as mp
 
 import yaml
@@ -15,11 +17,11 @@ def create_transition_dic(width,height):
 #        print("\nn = "+str(n))
         adjacent_edges_list=[]
 #        print("if (n-1)%width !=0, then left exists; value is "+str((n-1)%width))
-        if ((n-1)%width != 0): 
+        if ((n-1)%width != 0):
 #            print("left = "+str(n-1))
             adjacent_edges_list.append(n-1) # left
-#        print("if n%width !=0, then right exists; value is "+str(n%width))    
-        if (n%width     != 0): 
+#        print("if n%width !=0, then right exists; value is "+str(n%width))
+        if (n%width     != 0):
 #            print("right = "+str(n+1))
             adjacent_edges_list.append(n+1) # right
 #        print("if n > width, then top exists")
@@ -53,7 +55,7 @@ def print_list_of_transitions(list_of_transitions):
     for this_list in list_of_transitions:
         print(this_list)
     return
-    
+
 def append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status):
     new_transition_list=[]
     for this_list in list_of_transitions:
@@ -80,7 +82,7 @@ def get_transitions_for_seed(starting_value,print_status,
     if print_status: print("\nseed:")
     this_transition=[starting_value]
     list_of_transitions.append(this_transition)
-    if print_status: 
+    if print_status:
         print("list of transitions:")
         print_list_of_transitions(list_of_transitions)
 
@@ -121,9 +123,9 @@ transition_dic = create_transition_dic(width,height)
 print_status=False
 
 list_of_transitions=[]
-processes = [mp.Process(target=get_transitions_for_seed, args=(starting_value, 
+processes = [mp.Process(target=get_transitions_for_seed, args=(starting_value,
                                             print_status,number_of_tiles_to_fill,
-                                            transition_dic,list_of_transitions)) 
+                                            transition_dic,list_of_transitions))
                                             for starting_value in range(1,number_of_processes+1)]
 
 # Run processes

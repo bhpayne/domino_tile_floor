@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import multiprocessing as mp
 import yaml
 import time
@@ -13,7 +15,7 @@ from random import randint
 # When satisfied, CTRL-C to stop.
 #
 # For a visual example of what this script accomplishes, see the game
-# http://www.snakegame.net/ 
+# http://www.snakegame.net/
 # The output of this script is a matrix of a size defined by two
 # parameters, "numrows" by "numcolumns".  A boarder is placed around this
 # matrix (the "None000" value) by placing the original matrix into a larger
@@ -32,7 +34,7 @@ from random import randint
 # choices is what makes the code long: the number of choices depends on the
 # number of open neighboring elements in the matrix.
 #
-# In the end, the integers can no longer be incremented as there are no more open neighboring 
+# In the end, the integers can no longer be incremented as there are no more open neighboring
 # locations.  This is due to either the matrix being filled or the "snake"
 # of previous integers has "cut itself off."  (There are open (zero-valued)
 # elements, but they are inaccessible due to previous choices.)  Normally
@@ -57,7 +59,7 @@ def print_grid(grid,num_rows):
     print(grid[x])
 
 def create_grid_with_boundaries(num_rows,num_columns):
-  grid = [[0 for x in range(num_columns+2)] for y in range(num_rows+2)] 
+  grid = [[0 for x in range(num_columns+2)] for y in range(num_rows+2)]
 
   for indx in range(num_columns+2):
     grid[0][indx]=None
@@ -78,18 +80,18 @@ def find_starting_location(grid):
     if (grid[x][y]==0):
       found_xy=True
   return x,y
-  
+
 def find_next_location(grid,current_x,current_y,watch_evolution):
 #  print("finding next location")
 #         north
 #  west  "value"  east
 #         south
-  
+
   west=grid[current_x][current_y-1]
   east=grid[current_x][current_y+1]
   north =grid[current_x-1][current_y]
   south =grid[current_x+1][current_y] # correct
-  if (watch_evolution):  
+  if (watch_evolution):
     print_grid(grid,num_rows)
     print("north=              "+str(north))
     print("west="+str(west)+", value="+str(grid[current_x][current_y])+", east="+str(east))
@@ -117,7 +119,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
 #      print("4 choices, 3") # west
       next_x=current_x
       next_y=current_y-1
-    
+
   #   0  v  0
   #      0
   elif ((south==0) and (east==0) and (west==0)):
@@ -125,7 +127,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     if (coin==0):
 #      print("3 choices V, 0") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
     elif (coin==1):
 #      print("3 choices V, 1") # east
       next_x=current_x
@@ -141,7 +143,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     if (coin==0):
 #      print("3 choices ^, 0") # north
       next_x=current_x-1
-      next_y=current_y  
+      next_y=current_y
     elif (coin==1):
 #      print("3 choices ^, 1") # east
       next_x=current_x
@@ -162,7 +164,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     elif (coin==1):
 #      print("3 choices <, 1") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
     else: #(coin==2):
 #      print("3 choices <, 2") # west
       next_x=current_x
@@ -179,7 +181,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     elif (coin==1):
 #      print("3 choices >, 1") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
     else: #(coin==2):
 #      print("3 choices >, 2") # east
       next_x=current_x
@@ -196,7 +198,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     else: #(coin==1):
 #      print("2 choices over/under, 1") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
   #   0  v  0
   elif ((east==0) and (west==0)):
     coin = randint(0,2)
@@ -209,7 +211,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
       next_x=current_x
       next_y=current_y-1
   #      0
-  #   0  v 
+  #   0  v
   elif ((north==0) and (west==0)):
     coin = randint(0,2)
     if (coin==0):
@@ -232,14 +234,14 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
 #      print("2 choices upper-right, 1") # east
       next_x=current_x
       next_y=current_y+1
-  #   0  v 
+  #   0  v
   #      0
   elif ((south==0) and (west==0)):
     coin = randint(0,2)
     if (coin==0):
 #      print("2 choices lower-left, 0") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
     else: #(coin==1):
 #      print("2 choices lower-left, 1") # west
       next_x=current_x
@@ -251,7 +253,7 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     if (coin==0):
 #      print("2 choices lower-right, 0") # south
       next_x=current_x+1
-      next_y=current_y    
+      next_y=current_y
     else: #(coin==1):
 #      print("2 choices lower-right, 1") # east
       next_x=current_x
@@ -273,10 +275,10 @@ def find_next_location(grid,current_x,current_y,watch_evolution):
     next_x=current_x
     next_y=current_y-1
   else:
-    no_remaining_choices=True  
+    no_remaining_choices=True
     next_x=-1
     next_y=-1
-  
+
   return next_x,next_y,no_remaining_choices
 
 def are_there_zeros_on_grid(grid,num_rows,num_columns):
@@ -285,7 +287,7 @@ def are_there_zeros_on_grid(grid,num_rows,num_columns):
       if (grid[jndx][indx]==0):
         return True
   return False
-  
+
 def find_snakes(num_tries,num_successes,output_max):
     f=open('results.dat','w')
     results_dic={}
@@ -295,13 +297,13 @@ def find_snakes(num_tries,num_successes,output_max):
         start_time_this_iteration = time.time()
 
         grid=create_grid_with_boundaries(num_rows,num_columns)
-  
+
         start_x,start_y=find_starting_location(grid)
         current_x=start_x
         current_y=start_y
         value=1
         grid[current_x][current_y]=value
-  
+
         increment_head=True
         change_value_by=1
         while increment_head:
@@ -315,14 +317,14 @@ def find_snakes(num_tries,num_successes,output_max):
             grid[next_x][next_y]=value
             current_x=next_x
             current_y=next_y
-          if (watch_evolution):  
+          if (watch_evolution):
             wait = raw_input("    press enter to continue incrementing head")
-  
+
         if (watch_evolution):
-          print("switching to tail exploration")  
+          print("switching to tail exploration")
         current_x=start_x
         current_y=start_y
-        value=0  
+        value=0
         increment_tail=True
         change_value_by=-1
         while increment_tail:
@@ -336,18 +338,18 @@ def find_snakes(num_tries,num_successes,output_max):
             current_y=next_y
         if (watch_evolution):
           print("no remaining tail locations")
-  
+
         if (num_tries%1000==0 and not suppress_display):
           print("num_tries="+str(num_tries))
-    
+
         if (watch_evolution) and (are_there_zeros_on_grid(grid,num_rows,num_columns)):
           print("this snake does not fill the grid")
           print("num_tries="+str(num_tries))
-          elapsed_time = time.time() - start_time_this_iteration     
+          elapsed_time = time.time() - start_time_this_iteration
           print("elapsed time: "+str(elapsed_time)+" seconds")
         if not are_there_zeros_on_grid(grid,num_rows,num_columns):
           if (not suppress_display):
-            print("space-filling curve found!")  
+            print("space-filling curve found!")
             print_grid(grid,num_rows)
           num_successes+=1
           if (not suppress_display):
@@ -368,7 +370,7 @@ def find_snakes(num_tries,num_successes,output_max):
               f.write(str(val[0]) +" "+ str(val[1])+"\n")
             f.close()
             break
-    
+
         if (watch_evolution):
           print("grid: ")
           print_grid(grid,num_rows)
@@ -385,7 +387,7 @@ def run_search(output_max,number_of_processes,num_tries,num_successes):
     #print(list_of_max)
 
     start_time_for_search = time.time()
-    processes = [mp.Process(target=find_snakes, args=(num_tries,num_successes,output_max_per_proc)) 
+    processes = [mp.Process(target=find_snakes, args=(num_tries,num_successes,output_max_per_proc))
                                      for output_max_per_proc in list_of_max]
     for p in processes:  # Run processes
         p.start()
@@ -416,11 +418,11 @@ if ('num_proc' in config.keys()):
 else:
     number_of_processes=1
 if ('find_optimal_proc' in config.keys()):
-    find_optimal_proc = config['find_optimal_proc'] 
+    find_optimal_proc = config['find_optimal_proc']
 else:
     find_optimal_proc = False
 
-# initialize variables    
+# initialize variables
 num_tries=0
 num_successes=0
 max_attempts=1000000
@@ -448,9 +450,9 @@ while(not found_best_proc_count):
     print("number_of_processes="+str(number_of_processes))
     run_times=[]
     for indx in range(timing_ensemble_size):
-        elapsed_time_for_search=run_search(output_max,number_of_processes,num_tries,num_successes)    
+        elapsed_time_for_search=run_search(output_max,number_of_processes,num_tries,num_successes)
         run_times.append(elapsed_time_for_search)
-    average_run_time=sum(run_times)/(timing_ensemble_size*1.0)    
+    average_run_time=sum(run_times)/(timing_ensemble_size*1.0)
     record_of_searches_dic[number_of_processes]=average_run_time
     if (average_run_time>record_of_searches_dic[number_of_processes-1]):
         found_best_proc_count=True
