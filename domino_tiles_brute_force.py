@@ -282,11 +282,11 @@ def are_there_zeros_on_grid(grid,num_rows,num_columns):
   
 # user defined variables
 # dimensions of two dimensional grid:
-num_rows = 9
-num_columns = 9
+num_rows = 8
+num_columns = 8
 watch_evolution=False
 suppress_display=True
-output_max=100
+output_max=10
 
 # initialize variables    
 num_tries=0
