@@ -14,6 +14,6 @@ docker_build:
 	time docker build -f Dockerfile -t domino .
 docker_build_fresh:
 	time docker build --no-cache -f Dockerfile -t domino .
-docker_live:
+docker_live: docker_build
 	docker run -it -v `pwd`:/scratch -w /scratch --rm domino /bin/bash
 

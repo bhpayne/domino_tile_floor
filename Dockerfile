@@ -15,9 +15,13 @@ RUN apt update && apt -y upgrade && apt -y install \
   python3-dev \
   python3-pip \
   graphviz-dev \
-  python-yaml
+  python-yaml \
+  build-essential \
+  imagemagick
 
 #RUN pip3 install pygraphviz pydot
+
+RUN pip3 install matplotlib seaborn networkx
 
 # Clean up apt mess
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
