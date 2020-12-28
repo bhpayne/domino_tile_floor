@@ -6,11 +6,6 @@ __author__ = """Ben Payne (ben.is.located@gmail.com)"""
 import numpy
 import seaborn as sns
 
-# with open('4x3.csv') as file_handle:
-#     file_content = file_handle.read()
-#
-# print(file_content)
-
 # https://stackoverflow.com/a/4315914/1164295
 ary = numpy.loadtxt(open("4x3.csv", "r"), delimiter=",")
 
