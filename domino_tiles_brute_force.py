@@ -63,7 +63,13 @@ def read_grid_from_csv(filename) -> list:
 
     grid=[]
     for line in file_content:
-        grid.append([int(x) for x in line.strip().split(",")])
+        temp_list = []
+        for elem in line.strip().split(","):
+            try:
+                temp_list.append(int(elem))
+            except ValueError:
+                temp_list.append(None)
+        grid.append(temp_list)
     return grid
 
 def convert_success_csv_to_frames(filename: str) -> None:
@@ -73,11 +79,18 @@ def convert_success_csv_to_frames(filename: str) -> None:
     max_val=0
     for row in grid:
         for val in row:
-            if val>max_val: max_val=val
-    min_val=grid[0][0]
+            try:
+                if val>max_val: max_val=val
+            except TypeError:
+                pass
+    min_val = 0
+    #min_val=min(x for x in grid[0] if x is not None) # https://stackoverflow.com/questions/2295461/list-minimum-in-python-with-none
     for row in grid:
         for val in row:
-            if val<min_val: min_val=val
+            try:
+                if val<min_val: min_val=val
+            except TypeError:
+                pass
     #print("max=",max_val,"min=",min_val)
 
     for threshold_val in range(min_val,max_val+1):
@@ -85,7 +98,10 @@ def convert_success_csv_to_frames(filename: str) -> None:
         new_grid=copy.deepcopy(grid)
         for row_index,row in enumerate(grid):
             for col_index,val in enumerate(row):
-                if val>threshold_val:
+                try:
+                    if val>threshold_val:
+                        new_grid[row_index][col_index]=-5
+                except TypeError:
                     new_grid[row_index][col_index]=-5
         with open(filename+"_frame_"+str(threshold_val),'w') as file_handle:
             for row in new_grid:
@@ -103,21 +119,19 @@ def convert_success_csv_to_frames(filename: str) -> None:
         # convert -delay 50 output__{0..63}.png -delay 200 output__64.png -loop 0 8x8.gif
     return
 
-def minimum_in_grid(grid:list) -> int:
-    """
-    """
-    min = grid[1][1]
-    for row_index in range(1,len(grid)-1):
-        for val in grid[row_index][1:len(grid)-1]:
-            if val<min: min=val
-    return min
 
 def offset_grid(grid:list) -> list:
     """
     Given a grid with a two-headed snake (positive and negative values),
     off-set each value such that only non-negative values are present
     """
-    min = minimum_in_grid(grid)
+    min = 10000
+    for row_index in range(1,len(grid)-1):
+        for val in grid[row_index][1:len(grid)-1]:
+            try:
+                if val<min: min=val
+            except TypeError:
+                pass
     #print("min=",min)
 
     for row_index in range(1,len(grid)-1):
@@ -125,12 +139,17 @@ def offset_grid(grid:list) -> list:
         for col_index,val in enumerate(grid[row_index][1:len(grid)-1]):
             #print("row",row_index,"col",col_index)
             #display_grid(grid)
-            if val<0:
-                #print("add",abs(min))
-                grid[row_index][col_index+1] += abs(min)
-            else:
-                #print("add",abs(min)-1)
-                grid[row_index][col_index+1] += abs(min)-1
+            try:
+                if val<0:
+                    #print("add",abs(min))
+                    grid[row_index][col_index+1] += abs(min)
+                else:
+                    #print("add",abs(min)-1)
+                    grid[row_index][col_index+1] += abs(min)-1
+            except TypeError:
+                pass
+#                grid[row_index][col_index+1] = -5
+
 
     return grid
 
@@ -141,7 +160,7 @@ def display_grid(grid: list) -> None:
     for index in range(len(grid)):
         print(grid[index])
 
-def print_grid_to_file(grid: list) -> None:
+def save_grid_to_file(grid: list) -> None:
     """
     """
     grid=offset_grid(grid)
@@ -170,6 +189,11 @@ def create_grid_with_boundaries(num_rows: int,num_columns: int) -> list:
         grid[indx][0]=None
     for indx in range(num_rows+2):
         grid[indx][num_columns+1]=None
+
+    grid[1][1]=None
+    grid[2][1]=None
+    grid[1][2]=None
+    grid[2][2]=None
     return(grid)
 
 def find_starting_location(grid):
@@ -465,7 +489,7 @@ if __name__ == "__main__":
         if (not suppress_display):
           print("space-filling curve found!")
           display_grid(grid)
-          filename = print_grid_to_file(grid)
+          filename = save_grid_to_file(grid)
           convert_success_csv_to_frames(filename)
         num_successes+=1
         if (not suppress_display):
