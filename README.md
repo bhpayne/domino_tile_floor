@@ -10,7 +10,7 @@ A domino-covered grid is like Numbrix, but with the constraint that the number o
 
 ![gif of two headed snake on 8x8 grid](https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8.gif?raw=true)
 
-Additionally, any grid that can be covered by dominos is in scope for this project.
+Additionally, any grid that can be covered by dominos is in scope for this project. Below is an image of a square grid with a missing 2x2 patch in the upper left corner.
 
 ![gif of two headed snake on 8x8 grid with 2x2 missing](https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8_missing_2x2.gif?raw=true)
 
