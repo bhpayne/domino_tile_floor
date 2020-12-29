@@ -21,7 +21,7 @@ RUN apt update && apt -y upgrade && apt -y install \
 
 #RUN pip3 install pygraphviz pydot
 
-RUN pip3 install matplotlib seaborn networkx
+RUN pip3 install matplotlib seaborn networkx PyYAML
 
 # Clean up apt mess
 RUN apt clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

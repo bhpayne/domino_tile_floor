@@ -190,13 +190,14 @@ def create_grid_with_boundaries(num_rows: int,num_columns: int) -> list:
     for indx in range(num_rows+2):
         grid[indx][num_columns+1]=None
 
-    grid[1][1]=None
-    grid[2][1]=None
-    grid[1][2]=None
-    grid[2][2]=None
+    # the following is a manual insertion of an empty 2x2 region
+    #grid[1][1]=None
+    #grid[2][1]=None
+    #grid[1][2]=None
+    #grid[2][2]=None
     return(grid)
 
-def find_starting_location(grid):
+def find_starting_location(grid: list, num_rows: int, num_columns: int):
     """
     """
     found_xy=False

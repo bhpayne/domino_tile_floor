@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+for a given starting location in the grid, 
+enumerate all viable space-filling curves
+"""
+
 def create_transition_dic(width,height):
+    """
+    """
     transition_dic={}
     num_tiles=width*height
 #    print("width= "+str(width))
@@ -28,11 +35,15 @@ def create_transition_dic(width,height):
     return transition_dic
 
 def print_transition_dic(transition_dic):
+    """
+    """
     for key,value in transition_dic.iteritems():
         print("start = "+str(key) +"; neighbors = "+ str(value))
     return
 
 def transition_2x3():
+    """
+    """
     transition_dic={}
     transition_dic[1]=[2,4]
     transition_dic[2]=[1,5,3]
@@ -44,11 +55,15 @@ def transition_2x3():
 
 
 def print_list_of_transitions(list_of_transitions):
+    """
+    """
     for this_list in list_of_transitions:
         print(this_list)
     return
 
 def append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status):
+    """
+    """
     new_transition_list=[]
     for this_list in list_of_transitions:
         if print_status: print("\nthis list = ")
@@ -67,36 +82,37 @@ def append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill
     list_of_transitions=new_transition_list
     return list_of_transitions
 
-width=7
-height=7
-starting_value=1
+if __name__=="__main__":
+    width=5
+    height=5
+    starting_value=1
 
-number_of_tiles_to_fill=width*height
+    number_of_tiles_to_fill=width*height
 
-transition_dic = create_transition_dic(width,height)
-#print_transition_dic(transition_dic)
+    transition_dic = create_transition_dic(width,height)
+    #print_transition_dic(transition_dic)
 
-list_of_transitions=[]
+    list_of_transitions=[]
 
-print_status=False
+    print_status=False
 
-f=open('record_'+str(width)+'x'+str(height)+'_'+str(starting_value)+'.dat','w')
+    with open('transitions_'+str(width)+'x'+str(height)+'_'+str(starting_value)+'.dat','w') as f:
+        f.write("loop index, number of tiles to fill, number of transitions\n")
 
-if print_status: print("\nseed:")
-this_transition=[starting_value]
-list_of_transitions.append(this_transition)
-if print_status:
-    print("list of transitions:")
-    print_list_of_transitions(list_of_transitions)
+        if print_status: print("\nseed:")
+        this_transition=[starting_value]
+        list_of_transitions.append(this_transition)
+        if print_status:
+            print("list of transitions:")
+            print_list_of_transitions(list_of_transitions)
 
-for loop_indx in range(number_of_tiles_to_fill-1):
-    print("\nstep "+str(loop_indx) + " of "+str(number_of_tiles_to_fill))
-    list_of_transitions = append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status)
-    print("number of searches = "+str(len(list_of_transitions)))
-    f.write(str(loop_indx+1)+" "+str(number_of_tiles_to_fill)+" "+str(len(list_of_transitions))+"\n")
-#    print("list of transitions:")
-#    print_list_of_transitions(list_of_transitions)
-print("list of transitions:")
-print_list_of_transitions(list_of_transitions)
+        for loop_indx in range(number_of_tiles_to_fill-1):
+            print("\nstep "+str(loop_indx) + " of "+str(number_of_tiles_to_fill))
+            list_of_transitions = append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status)
+            print("number of searches = "+str(len(list_of_transitions)))
+            f.write(str(loop_indx+1)+" "+str(number_of_tiles_to_fill)+" "+str(len(list_of_transitions))+"\n")
+        #    print("list of transitions:")
+        #    print_list_of_transitions(list_of_transitions)
+        print("list of transitions:")
+        print_list_of_transitions(list_of_transitions)
 
-f.close()
