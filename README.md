@@ -12,7 +12,7 @@ A domino-covered grid is like Numbrix, but with the constraint that the number o
 
 Additionally, any grid that can be covered by dominos is in scope for this project.
 
-![gif of two headed snake on 8x8 grid with 2x2 missing(]https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8_missing_2x2.gif?raw=true)
+![gif of two headed snake on 8x8 grid with 2x2 missing](https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8_missing_2x2.gif?raw=true)
 
 Why: I'd like to cover my bathroom floor with dominos such that there is a single contiguous sequence. 
 
