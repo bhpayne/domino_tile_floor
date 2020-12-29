@@ -8,11 +8,11 @@ Threshold objective: find a single 200x200 grid that is indistinguishable from r
 
 A domino-covered grid is like Numbrix, but with the constraint that the number of tiles in the grid must be even such that the grid could be covered by dominos. For example, this constraint excludes grids of size 3x3 and 9x9.
 
-![gif of two headed snake on 8x8 grid](https://github.com/bhpayne/domino_tile_floor/blob/master/8x8.gif?raw=true)
+![gif of two headed snake on 8x8 grid](https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8.gif?raw=true)
 
 Additionally, any grid that can be covered by dominos is in scope for this project.
 
-Todo: gif of two headed snake on 8x8 grid with a 2x2 corner missing
+![gif of two headed snake on 8x8 grid with 2x2 missing(]https://github.com/bhpayne/domino_tile_floor/blob/master/visualize_grid/8x8_missing_2x2.gif?raw=true)
 
 Why: I'd like to cover my bathroom floor with dominos such that there is a single contiguous sequence. 
 
