@@ -55,7 +55,7 @@ num_successes
 times
 """
 
-def read_grid_from_csv(filename) -> list:
+def read_grid_from_csv(filename: str) -> list:
     """
     """
     with open(filename, 'r') as file_handle:
@@ -410,11 +410,58 @@ def find_next_location(grid: list,current_x: int,current_y: int,watch_evolution:
   return next_x,next_y,no_remaining_choices
 
 def are_there_zeros_on_grid(grid: list,num_rows: int,num_columns: int) -> bool:
-  for indx in range(num_columns+2):
-    for jndx in range(num_rows+2):
-      if (grid[jndx][indx]==0):
-        return True
-  return False
+    """
+    """
+    for indx in range(num_columns+2):
+        for jndx in range(num_rows+2):
+            if (grid[jndx][indx]==0):
+                return True
+    return False
+
+
+def grid_search(num_rows: int,num_columns: int, watch_evolution:bool) -> list:
+    """
+    """
+    grid=create_grid_with_boundaries(num_rows,num_columns)
+
+    start_x,start_y=find_starting_location(grid, num_rows, num_columns)
+    current_x=start_x
+    current_y=start_y
+    value=1
+    grid[current_x][current_y]=value
+
+    increment_head=True
+    change_value_by=1
+    while increment_head:
+        next_x,next_y,no_remaining_choices=find_next_location(grid,current_x,current_y,watch_evolution)
+        if no_remaining_choices:
+            increment_head=False
+            if (watch_evolution): print("no remaining locations for head")
+        else:
+            value+=1
+            grid[next_x][next_y]=value
+            current_x=next_x
+            current_y=next_y
+        if (watch_evolution): wait = input("    press enter to continue incrementing head")
+
+    if (watch_evolution): print("switching to tail exploration")
+    current_x=start_x
+    current_y=start_y
+    value=0
+    increment_tail=True
+    change_value_by=-1
+    while increment_tail:
+        next_x,next_y,no_remaining_choices=find_next_location(grid,current_x,current_y,watch_evolution)
+        if no_remaining_choices:
+            increment_tail=False
+        else:
+            value+=-1
+            grid[next_x][next_y]=value
+            current_x=next_x
+            current_y=next_y
+    if (watch_evolution): print("no remaining tail locations")
+    return grid
+
 
 if __name__ == "__main__":
     # user defined variables
@@ -423,6 +470,7 @@ if __name__ == "__main__":
     num_columns = 8 # grid size
     watch_evolution=False # if True, print every step to screen
     suppress_display=False#True # if False, print progress indicators and successes
+    create_frames=False
     output_max=1 # number of successful outcomes
 
     print('for a '+str(num_rows)+"x"+str(num_columns)+" grid, find "+str(output_max)+" successes")
@@ -431,7 +479,6 @@ if __name__ == "__main__":
     num_tries=0
     num_successes=0
 
-    f=open('results.dat','w')
     results_dic={}
 
     start_time_between_successes = time.time()
@@ -439,63 +486,26 @@ if __name__ == "__main__":
       num_tries+=1
       start_time_this_iteration = time.time()
 
-      grid=create_grid_with_boundaries(num_rows,num_columns)
-
-      start_x,start_y=find_starting_location(grid)
-      current_x=start_x
-      current_y=start_y
-      value=1
-      grid[current_x][current_y]=value
-
-      increment_head=True
-      change_value_by=1
-      while increment_head:
-        next_x,next_y,no_remaining_choices=find_next_location(grid,current_x,current_y,watch_evolution)
-        if no_remaining_choices:
-          increment_head=False
-          if (watch_evolution): print("no remaining locations for head")
-        else:
-          value+=1
-          grid[next_x][next_y]=value
-          current_x=next_x
-          current_y=next_y
-        if (watch_evolution):
-          wait = input("    press enter to continue incrementing head")
-
-      if (watch_evolution): print("switching to tail exploration")
-      current_x=start_x
-      current_y=start_y
-      value=0
-      increment_tail=True
-      change_value_by=-1
-      while increment_tail:
-        next_x,next_y,no_remaining_choices=find_next_location(grid,current_x,current_y,watch_evolution)
-        if no_remaining_choices:
-          increment_tail=False
-        else:
-          value+=-1
-          grid[next_x][next_y]=value
-          current_x=next_x
-          current_y=next_y
-      if (watch_evolution): print("no remaining tail locations")
+      grid=grid_search(num_rows,num_columns, watch_evolution)
 
       if (num_tries%1000==0 and not suppress_display): print("num_tries="+str(num_tries))
 
       if (watch_evolution) and (are_there_zeros_on_grid(grid,num_rows,num_columns)):
-        print("this snake does not fill the grid")
-        print("num_tries="+str(num_tries))
-        elapsed_time = time.time() - start_time_this_iteration
-        print("elapsed time: "+str(elapsed_time)+" seconds")
+          print("this snake does not fill the grid")
+          print("num_tries="+str(num_tries))
+          elapsed_time = time.time() - start_time_this_iteration
+          print("elapsed time: "+str(elapsed_time)+" seconds")
       if not are_there_zeros_on_grid(grid,num_rows,num_columns):
         if (not suppress_display):
-          print("space-filling curve found!")
-          display_grid(grid)
-          filename = save_grid_to_file(grid)
-          convert_success_csv_to_frames(filename)
+            print("space-filling curve found!")
+            display_grid(grid)
+            if create_frames:
+                filename = save_grid_to_file(grid)
+                convert_success_csv_to_frames(filename)
         num_successes+=1
         if (not suppress_display):
-          print("number of tries: "+str(num_tries))
-          print("number of successes: "+str(num_successes))
+            print("number of tries: "+str(num_tries))
+            print("number of successes: "+str(num_successes))
         elapsed_time = time.time() - start_time_between_successes
         if (not suppress_display): print("elapsed time: "+str(elapsed_time)+" seconds")
     #    wait = input("    press enter to continue to next grid attempt")
@@ -507,15 +517,17 @@ if __name__ == "__main__":
         num_tries=0
 
         if (num_successes==output_max):
-            print("for pasting into Jupyter, the same set of result in a cleaner format:")
-            print("time to find success result, number of failures")
-            for key,val in results_dic.items():
-                print(str(val[0]) +", "+ str(val[1]))
-                f.write(str(val[0]) +", "+ str(val[1])+"\n")
-            f.close()
             break
 
       if (watch_evolution):
-        print("grid: ")
-        display_grid(grid)
-        wait = input("    press enter to continue to next grid attempt")
+          print("grid: ")
+          display_grid(grid)
+          wait = input("    press enter to continue to next grid attempt")
+
+
+    print("for pasting into Jupyter, the same set of result in a cleaner format:")
+    print("time to find success result, number of failures")
+    with open('results.dat','w') as file_handle:
+        for key,val in results_dic.items():
+            print(str(val[0]) +", "+ str(val[1]))
+            file_handle.write(str(val[0]) +", "+ str(val[1])+"\n")
