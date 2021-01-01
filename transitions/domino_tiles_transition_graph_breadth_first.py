@@ -5,7 +5,9 @@ for a given starting location in the grid,
 enumerate all viable space-filling curves
 """
 
-def create_dict_of_adjacent_tile_indices(width: int,height: int) -> dict:
+import random
+
+def create_dict_of_adjacent_tile_indices(width: int, height: int) -> dict:
     """
     there is a grid of size width*height.
     Each location in the grid has an integer index, 1 to width*height
@@ -57,6 +59,7 @@ def transition_2x3() -> dict:
 
 
 def append_next_value(transition_dic: dict,list_of_transitions: list,
+                      maximum_number_of_lists: int,
                       number_of_tiles_in_grid: int,print_status: bool) -> list:
     """
     for each space-filling curve, increase the length by
@@ -69,18 +72,25 @@ def append_next_value(transition_dic: dict,list_of_transitions: list,
             if print_status: print("last value = " + str(this_list[-1]))
             for next_value in transition_dic[this_list[-1]]:
                 if print_status: print("  next value = "+str(next_value))
-                if next_value not in this_list:
+                if next_value not in this_list: # valid forward move
+#                    if (maximum_number_of_lists is None) or len(list_of_transitions)<maximum_number_of_lists:
                     new_list=list(this_list) # https://stackoverflow.com/questions/2612802/how-to-clone-or-copy-a-list
                     new_list.append(next_value)
                     if print_status: print("    adding next value to list; new list is",new_list)
                     new_transition_list.append(new_list)
-    list_of_transitions=new_transition_list
+
+    if (maximum_number_of_lists is None) or len(list_of_transitions)<maximum_number_of_lists:
+        return new_transition_list
+    else: # there is a max limit in place and len(list_of_transitions) exceeds that limit
+        #return new_transition_list[:maximum_number_of_lists]
+        return random.sample(new_transition_list, min(maximum_number_of_lists,len(new_transition_list)))
     return list_of_transitions
 
 if __name__=="__main__":
     width=5
     height=5
     starting_value=1
+    maximum_number_of_lists=None
 
     number_of_tiles_in_grid=width*height
 
@@ -92,7 +102,7 @@ if __name__=="__main__":
 
     list_of_transitions=[]
 
-    print_status=True#False
+    print_status=False
 
     with open('transitions_'+str(width)+'x'+str(height)+'_'+str(starting_value)+'.dat','w') as f:
         f.write("loop index, number of tiles to fill, number of transitions\n")
@@ -106,6 +116,7 @@ if __name__=="__main__":
         for loop_indx in range(number_of_tiles_in_grid-1):
             print("\nstep "+str(loop_indx) + " of "+str(number_of_tiles_in_grid))
             list_of_transitions = append_next_value(transition_dic,list_of_transitions,
+                                                    maximum_number_of_lists,
                                                     number_of_tiles_in_grid,print_status=False)
             print("number of active searches = "+str(len(list_of_transitions)))
             f.write(str(loop_indx+1)+" "+str(number_of_tiles_in_grid)+" "+
