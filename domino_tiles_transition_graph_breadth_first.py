@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
 """
-for a given starting location in the grid, 
+for a given starting location in the grid,
 enumerate all viable space-filling curves
 """
 
-def create_transition_dic(width,height):
+def create_dict_of_adjacent_tile_indices(width: int,height: int) -> dict:
     """
+    there is a grid of size width*height.
+    Each location in the grid has an integer index, 1 to width*height
+
+    the "transition dict" contains
+        key:   integer index of each tile in the grid
+        value: list of adjacent tile indices.
     """
     transition_dic={}
     num_tiles=width*height
@@ -34,15 +40,11 @@ def create_transition_dic(width,height):
         transition_dic[n]=adjacent_edges_list
     return transition_dic
 
-def print_transition_dic(transition_dic):
-    """
-    """
-    for key,value in transition_dic.iteritems():
-        print("start = "+str(key) +"; neighbors = "+ str(value))
-    return
 
-def transition_2x3():
+def transition_2x3() -> dict:
     """
+    A manually specified transition dict
+    for comparison with the "create_dict_of_adjacent_tile_indices" above
     """
     transition_dic={}
     transition_dic[1]=[2,4]
@@ -54,30 +56,23 @@ def transition_2x3():
     return transition_dic
 
 
-def print_list_of_transitions(list_of_transitions):
+def append_next_value(transition_dic: dict,list_of_transitions: list,
+                      number_of_tiles_in_grid: int,print_status: bool) -> list:
     """
-    """
-    for this_list in list_of_transitions:
-        print(this_list)
-    return
-
-def append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status):
-    """
+    for each space-filling curve, increase the length by
+    appending adjacent tile indices
     """
     new_transition_list=[]
     for this_list in list_of_transitions:
-        if print_status: print("\nthis list = ")
-        if print_status: print(this_list)
-        if (len(this_list)<(number_of_tiles_to_fill)): # if this list isn't "done"
-            last_value=this_list[len(this_list)-1]
-            if print_status: print("last value = " + str(last_value))
-            for next_value in transition_dic[last_value]:
-                if print_status: print("next value = "+str(next_value))
+        if print_status: print("\nthis list = "+str(this_list))
+        if (len(this_list)<(number_of_tiles_in_grid)): # if this list isn't "done"
+            if print_status: print("last value = " + str(this_list[-1]))
+            for next_value in transition_dic[this_list[-1]]:
+                if print_status: print("  next value = "+str(next_value))
                 if next_value not in this_list:
-                    if print_status: print("adding next value to list")
                     new_list=list(this_list) # https://stackoverflow.com/questions/2612802/how-to-clone-or-copy-a-list
                     new_list.append(next_value)
-                    if print_status: print(new_list)
+                    if print_status: print("    adding next value to list; new list is",new_list)
                     new_transition_list.append(new_list)
     list_of_transitions=new_transition_list
     return list_of_transitions
@@ -87,32 +82,36 @@ if __name__=="__main__":
     height=5
     starting_value=1
 
-    number_of_tiles_to_fill=width*height
+    number_of_tiles_in_grid=width*height
 
-    transition_dic = create_transition_dic(width,height)
-    #print_transition_dic(transition_dic)
+    transition_dic = create_dict_of_adjacent_tile_indices(width,height)
+    # print("dict of adjacent tile indices =")
+    # for key,value in transition_dic.items():
+    #     print("start = "+str(key) +"; neighbors = "+ str(value))
+
 
     list_of_transitions=[]
 
-    print_status=False
+    print_status=True#False
 
     with open('transitions_'+str(width)+'x'+str(height)+'_'+str(starting_value)+'.dat','w') as f:
         f.write("loop index, number of tiles to fill, number of transitions\n")
 
-        if print_status: print("\nseed:")
         this_transition=[starting_value]
         list_of_transitions.append(this_transition)
         if print_status:
             print("list of transitions:")
-            print_list_of_transitions(list_of_transitions)
+            for this_list in list_of_transitions: print(this_list)
 
-        for loop_indx in range(number_of_tiles_to_fill-1):
-            print("\nstep "+str(loop_indx) + " of "+str(number_of_tiles_to_fill))
-            list_of_transitions = append_next_value(transition_dic,list_of_transitions,number_of_tiles_to_fill,print_status)
-            print("number of searches = "+str(len(list_of_transitions)))
-            f.write(str(loop_indx+1)+" "+str(number_of_tiles_to_fill)+" "+str(len(list_of_transitions))+"\n")
+        for loop_indx in range(number_of_tiles_in_grid-1):
+            print("\nstep "+str(loop_indx) + " of "+str(number_of_tiles_in_grid))
+            list_of_transitions = append_next_value(transition_dic,list_of_transitions,
+                                                    number_of_tiles_in_grid,print_status=False)
+            print("number of active searches = "+str(len(list_of_transitions)))
+            f.write(str(loop_indx+1)+" "+str(number_of_tiles_in_grid)+" "+
+                    str(len(list_of_transitions))+"\n")
+
         #    print("list of transitions:")
-        #    print_list_of_transitions(list_of_transitions)
+        #    for this_list in list_of_transitions: print(this_list)
         print("list of transitions:")
-        print_list_of_transitions(list_of_transitions)
-
+        for this_list in list_of_transitions: print(this_list)
