@@ -1,0 +1,4 @@
+width: 6
+height: 6
+num_proc: 2
+find_optimal_proc: True
