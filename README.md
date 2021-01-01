@@ -1,4 +1,4 @@
-# domino_tile_floor
+# domino tile floor
 
 Completely cover a 2D grid with 2x1 domino tiles in a self-avoiding walk.
 
