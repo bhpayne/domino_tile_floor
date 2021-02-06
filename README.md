@@ -36,3 +36,5 @@ Why: I'd like to cover my bathroom floor with dominos such that there is a singl
 <https://graphthinking.blogspot.com/2016/12/tile-bathroom-floor-with-dominos.html>
 
 <http://www.mathworks.com/matlabcentral/fileexchange/21720-domino-tiles>
+
+<https://oeis.org/search?q=greek+key&sort=&language=&go=Search> and <http://www.njohnston.ca/2009/05/on-maximal-self-avoiding-walks/>
